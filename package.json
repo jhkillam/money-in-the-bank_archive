@@ -1,0 +1,26 @@
+{
+  "name": "balance-future",
+  "version": "0.0.1",
+  "description": "Web app to project your future balance",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jhkillam/balance-future.git"
+  },
+  "author": "Joey Killam",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jhkillam/balance-future/issues"
+  },
+  "homepage": "https://github.com/jhkillam/balance-future#readme",
+  "dependencies": {
+    "express": "4.17.1",
+    "knex": "0.19.4",
+    "mustache": "3.1.0",
+    "nodemon": "1.19.3",
+    "sqlite3": "4.1.0"
+  }
+}
