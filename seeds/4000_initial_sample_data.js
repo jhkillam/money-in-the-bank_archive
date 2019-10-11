@@ -13,7 +13,7 @@ exports.seed = function(knex) {
 			},
 			{
 				transactionName: 'Car payment',
-				billAmount: 500.75,
+				billAmount: 500,
 				isPaid: false,
 				dueDate: "2019-11-15"
 			},

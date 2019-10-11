@@ -3,11 +3,15 @@
 module.exports = {
 
   development: {
-    client: 'sqlite3',
-    connection: {
-      filename: './balance_db.sqlite3'
+    client: 'pg',
+    connection: 'postgres://localhost/future_balance',
+    pool: {
+      min: 2,
+      max: 10
     },
-    useNullAsDefault: true
+    migrations: {
+      tableName: 'knex_migrations'
+    }
   },
 
   staging: {

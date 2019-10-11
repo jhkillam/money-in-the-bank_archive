@@ -1,17 +1,17 @@
 
 exports.seed = function(knex) {
 	// Deletes ALL existing entries
-		return knex('Account Balance').del()
+		return knex('Accounts').del()
 		.then(function () {
 			// Inserts seed entries
-			return knex('Account Balance').insert([
-				{
+			return knex('Accounts').insert([
+				{	
 					accountName: 'Checking',
 					accountBalance: 5000,
 				},
 				{
 					accountName: 'Savings',
-					accountBalance: 16320.73,
+					accountBalance: 16320,
 				},
 			]);
 		});

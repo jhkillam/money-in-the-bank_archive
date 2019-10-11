@@ -15,5 +15,5 @@ npx knex migrate:latest
 npx knex seed:run
 
 # start express.js server on port 3000
-nodemon index.js
+npx nodemon index.js
 ```
