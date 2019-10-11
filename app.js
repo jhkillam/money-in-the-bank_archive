@@ -4,16 +4,18 @@ require('dotenv').config()
 const mustache = require('mustache')
 const fs = require('fs')
 const express = require('express')
-const passport = require('passport')
-
-var app = express()
+const app = express()
+const bodyParser = require('body-parser')
+app.use(bodyParser.urlencoded({extended: true}))
 
 const port = process.env.PORT
 app.listen(port, () => console.log('listening on port ' + port + " 🤖"))
 
 // ---------------------------------------------------------
 // Passport Configuration
-
+const session = require('express-session')
+app.use(session({secret: 'abcdef'})) // REPLACE WITH ENV
+const passport = require('passport')
 app.use(passport.initialize())
 app.use(passport.session())
 
@@ -32,26 +34,66 @@ app.get('/', (req, res) => {
 app.get('/login', (req, res) => {
     res.send(loginTemplate)
 })
-
 // ---------------------------------------------------------
-// Facebook Login
+// Login success/error pages and serialization
 
-// TODO: ADD TEMPLATES HERE
+// TODO: ADD TEMPLATES HERE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 app.get('/success', (req, res) => res.send("You have successfully logged in"))
 app.get('/error', (req, res) => res.send("Error logging in"))
 
 // this is invoked on authorization and serializes the user instance 
 // and stores it in the session via cookie
 passport.serializeUser(function(user, cb) {
-    cb(null, user)
+    cb(null, user.id)
 })
 
 // invoked every subsequent request to deserialize the instance, 
 // providing it the unique cookie identifier as a credential
-passport.deserializeUser(function(obj, cb) {
-    cb(null, obj)
+passport.deserializeUser(function(id, cb) {
+    User.findById(id, function(err, user) {
+        cb(err, user)
+    })
 })
 
+// ---------------------------------------------------------
+// Passport Local Authentication
+
+const LocalStrategy = require('passport-local').Strategy
+
+passport.use(new LocalStrategy(
+    function(userEmail, password, done) {
+    //    REPLACE WITH KNEX SQL QUERIES
+        UserDetails.findOne({
+            userEmail: userEmail
+            }, 
+        
+            function(err, user) {
+                if (err) {
+                    return done(err)
+                }
+
+                if (!user) {
+                    return done(null, false)
+                }
+
+                if (user.password != password) {
+                    return done(null, false)
+                }
+
+                return done(null, user)
+            }
+        )
+    }
+))
+
+app.post('/', 
+    passport.authenticate('local', {failureRedirect: '/error'}),
+    function(req, res) {
+        res.redirect('/success?useremail='+req.user.userEmail)
+    })
+
+// ---------------------------------------------------------
+// Facebook Login
 // ---------------------------------------------------------
 // Facebook Auth Configuration
 
