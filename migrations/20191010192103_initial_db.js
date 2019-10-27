@@ -1,32 +1,35 @@
 
 exports.up = function(knex) {
-    return knex.schema.createTable('Transactions', (table) => {
+    return knex.schema.createTable('Users', (table) => {
         table.increments('id')
-        table.string('transactionName')
-        table.integer('billAmount')
-        table.boolean('isPaid')
-        table.datetime('dueDate')
+        table.string('email')
+        table.unique('email')
+        table.string('password')
+        table.string('first_name')
+        table.string('last_name')
+        table.timestamp('user_creation_date')
     })
     .then(() => {
         return knex.schema.createTable('Accounts', (table) => {
             table.increments('id')
-            table.string('accountName')
-            table.integer('accountBalance')
+            table.string('account_name')
+            table.float('account_balance')
+            table.integer('user_id')
+            table.foreign('user_id').references('id').inTable('Users')
         })
     })
     .then(() => {
-        return knex.schema.createTable('Users', (table) => {
+        return knex.schema.createTable('Transactions', (table) => {
             table.increments('id')
-            table.string('userEmail')
+            table.string('transaction_name')
+            table.float('amount')
+            table.boolean('is_paid')
+            table.datetime('due_date')
+            table.integer('account_id')
+            table.foreign('account_id').references('id').inTable('Accounts')
         })
     })
-    .then(() => {
-        return knex.schema.createTable('Passwords', (table) => {
-            table.increments('id')
-            table.string('userPassword')
-        })
-    })
-};
+}
 
 exports.down = function(knex) {
     return knex.schema.dropTable('Transactions')
@@ -36,7 +39,4 @@ exports.down = function(knex) {
     .then(() => {
         return knex.schema.dropTable('Users')
     })
-    .then(() => {
-        return knex.schema.dropTable('Passwords')
-    })
-};
+}

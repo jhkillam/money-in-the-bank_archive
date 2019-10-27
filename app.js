@@ -13,8 +13,9 @@ app.listen(port, () => console.log('listening on port ' + port + " 🤖"))
 
 // ---------------------------------------------------------
 // Passport Configuration
-const session = require('express-session')
-app.use(session({secret: 'abcdef'})) // REPLACE WITH ENV
+// const session = require('express-session')
+// const SESSION_SECRET = process.env.SESSION_SECRET
+// app.use(session({secret: SESSION_SECRET}))
 const passport = require('passport')
 app.use(passport.initialize())
 app.use(passport.session())
@@ -25,15 +26,11 @@ const db = require('knex')(dbConfigs.development)
 
 // load templates
 const homepageTemplate = fs.readFileSync('./templates/homepage.html', 'utf8')
-const loginTemplate = fs.readFileSync('./templates/login.html', 'utf8')
 
 app.get('/', (req, res) => {
     res.send(homepageTemplate)
 })
 
-app.get('/login', (req, res) => {
-    res.send(loginTemplate)
-})
 // ---------------------------------------------------------
 // Login success/error pages and serialization
 
@@ -58,33 +55,31 @@ passport.deserializeUser(function(id, cb) {
 // ---------------------------------------------------------
 // Passport Local Authentication
 
-const LocalStrategy = require('passport-local').Strategy
+// const LocalStrategy = require('passport-local').Strategy
 
-passport.use(new LocalStrategy(
-    function(userEmail, password, done) {
-    //    REPLACE WITH KNEX SQL QUERIES
-        UserDetails.findOne({
-            userEmail: userEmail
-            }, 
+// passport.use(new LocalStrategy(
+//     function(user, pw, done) {
+//     //    REPLACE WITH KNEX SQL QUERIES
+//         knex('Users').where({userEmail: user}), 
         
-            function(err, user) {
-                if (err) {
-                    return done(err)
-                }
+//             function(err, user) {
+//                 if (err) {
+//                     return done(err)
+//                 }
 
-                if (!user) {
-                    return done(null, false)
-                }
+//                 if (!user) {
+//                     return done(null, false)
+//                 }
 
-                if (user.password != password) {
-                    return done(null, false)
-                }
+//                 if (user.password != password) {
+//                     return done(null, false)
+//                 }
 
-                return done(null, user)
-            }
-        )
-    }
-))
+//                 return done(null, user)
+//             }
+//         )
+//     }
+// ))
 
 app.post('/', 
     passport.authenticate('local', {failureRedirect: '/error'}),
