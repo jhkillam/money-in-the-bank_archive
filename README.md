@@ -1,6 +1,6 @@
-# Balance Future Web App
+# Money In The Bank Web App
 
-Initial work towards building Balance Future web app.
+Initial work towards building Money In The Bank web app.
 
 ## Development Setup Steps
 
